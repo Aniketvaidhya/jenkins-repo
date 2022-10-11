@@ -2,6 +2,6 @@ FROM openjdk
 
 WORKDIR /app
 
-COPY *.jar /app/java.jar
+COPY ./java-app/target/*.jar /app/java.jar
 
 CMD [ "java", "-jar", "java.jar" ]
