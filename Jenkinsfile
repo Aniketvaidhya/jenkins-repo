@@ -1,7 +1,11 @@
 pipeline {
 
     agent any
-    
+
+    environment {
+	
+	DOCKER_PW = credentials('DOCKER_PW')
+    }    
 
     stages {
 
