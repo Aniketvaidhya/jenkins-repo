@@ -1,28 +1,29 @@
 pipeline {
+
     agent any
+    
 
     stages {
-        stage ('build') {
 
+        stage('Build') {
             steps {
                 sh '''
-                ./jenkins/build/mvn.sh -B -DskipTests mvn clean package
-                ./jenkins/build/build.sh
+                    ./jenkins/build/mvn.sh mvn -B -DskipTests clean package
+                    ./jenkins/build/build.sh
+
                 '''
             }
+
             post {
                 success {
-                    archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
+                   archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
                 }
             }
+        }
 
-
-        stage ('test') {
-
+        stage('Test') {
             steps {
-                sh '''
-                    ./jenkins/test/mvn.sh mvn test
-                '''
+                sh './jenkins/test/mvn.sh mvn test'
             }
 
             post {
@@ -32,21 +33,15 @@ pipeline {
             }
         }
 
-        
-
-        stage ('push') {
+        stage('Push') {
             steps {
-                sh '''
-                    ./jenkins/push/push.sh
-                '''
+                sh './jenkins/push/push.sh'
             }
         }
 
-        stage ('deploy') {
+        stage('Deploy') {
             steps {
-                sh '''
-                    ./jenkins/deploy/deploy.sh
-                '''
+                sh './jenkins/deploy/deploy.sh'
             }
         }
     }
