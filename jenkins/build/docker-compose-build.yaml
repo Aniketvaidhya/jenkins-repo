@@ -2,7 +2,7 @@ version: '3'
 services:
   java-app:
     container_name: java-app
-    image: "hsinyih/java-app:v$BUILD_TAG"
+    image: "hsinyih/java-app:$BUILD_TAG"
     build:
       context: .
       dockerfile: Dockerfile-Java
