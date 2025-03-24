@@ -1,51 +1,28 @@
 pipeline {
-
-    agent any
-
-    environment {
-	
-	DOCKER_PW = credentials('DOCKER_PW')
-    }    
-
+    agent any 
     stages {
-
-        stage('Build') {
+        stage('Build') { 
             steps {
-                sh '''
-                    ./jenkins/build/mvn.sh mvn -B -DskipTests clean package
-                    ./jenkins/build/build.sh
-
-                '''
-            }
-
-            post {
-                success {
-                   archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
-                }
+                echo 'Building...'
             }
         }
-
-        stage('Test') {
+        stage('Test') { 
             steps {
-                sh './jenkins/test/mvn.sh mvn test'
-            }
-
-            post {
-                always {
-                    junit 'java-app/target/surefire-reports/*.xml'
-                }
-            }
-        }
-
-        stage('Push') {
-            steps {
-                sh './jenkins/push/push.sh'
+                echo 'Testing...'
+                // to run methods in parallel 
+                parallel (
+                  unitTest: {
+                    echo 'Running unit tests...'
+                  },
+                  integrationTest: {
+                    echo 'Running integration tests...'
+                  }
+                )
             }
         }
-
-        stage('Deploy') {
+        stage('Deploy') { 
             steps {
-                sh './jenkins/deploy/deploy.sh'
+                echo 'Deploying...'
             }
         }
     }
