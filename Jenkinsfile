@@ -1,28 +1,29 @@
 pipeline {
-
-    agent any
-    
+    agent any 
     stages {
-    
-        stage("build") {
-        
+        stage('Build') { 
             steps {
-                echo 'building the application...'
+                echo 'Building...'
             }
         }
-        
-        stage("test") {
-        
+        stage('Test') { 
             steps {
-                echo 'testing the application...'
+                echo 'Testing...'
+                // to run methods in parallel 
+                parallel (
+                  unitTest: {
+                    echo 'Running unit tests...'
+                  },
+                  integrationTest: {
+                    echo 'Running integration tests...'
+                  }
+                )
             }
         }
-        
-        stage("deploy") {
-        
+        stage('Deploy') { 
             steps {
-                echo 'deplying the application...'
+                echo 'Deploying...'
             }
         }
-    }   
+    }
 }
